@@ -6,7 +6,7 @@
           class="admin-words-buttons__item"
           :class="[
               {'admin-words-buttons__item--empty': /\s/.test(char)},
-              {'admin-words-buttons__item--stressed': stressedChars.includes(index)}
+              {'admin-words-buttons__item--stressed': stressedChars.includes(index.toString())}
               ]"
           @click="toggleStressedChar(index)"
       >
@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, ref} from "vue/dist/vue";
+import { computed, ref } from "vue";
 
 const newWord = ref<string>('');
 
@@ -25,7 +25,7 @@ const stressedChars = ref<string[]>([]);
 
 const splitWord = computed(() => newWord.value.split(''))
 
-function toggleStressedChar(index) {
+function toggleStressedChar(index: any) {
   const foundIndex = stressedChars.value.indexOf(index)
   if(foundIndex !== -1) {
     stressedChars.value.splice(foundIndex, 1)

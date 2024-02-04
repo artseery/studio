@@ -7,7 +7,7 @@ import AdminWordStress from './components/AdminWordStress.vue'
 
 const app = createApp(App)
 
-const router = new createRouter({
+const router = createRouter({
     history: createWebHistory(),
     routes: [
         { path: '/', redirect: '/admin' },

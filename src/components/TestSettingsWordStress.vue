@@ -17,7 +17,7 @@ import TestExecutionWordStress from './TestExecutionWordStress.vue';
 
 const currentState = ref<string>('settings');
 const test = ref<object[]>();
-const settings = ref<object>({
+const settings = ref<any>({
   count: '',
   letter: '',
 });

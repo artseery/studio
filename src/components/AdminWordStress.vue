@@ -7,7 +7,7 @@
           class="admin-words-buttons__item"
           :class="[
               {'admin-words-buttons__item--empty': /\s/.test(char)},
-              {'admin-words-buttons__item--stressed': stressedChars.includes(index)}
+              {'admin-words-buttons__item--stressed': stressedChars.includes(index.toString())}
               ]"
           @click="toggleStressedChar(index)"
       >
@@ -44,7 +44,7 @@ import {computed, onMounted, ref} from 'vue';
 
 const newWord = ref<string>('');
 const stressedChars = ref<string[]>([]);
-const savedWords = ref<object>({});
+const savedWords = ref<any>({});
 
 const splitWord = computed(() => newWord.value.split(''))
 
@@ -54,7 +54,7 @@ onMounted(async () => {
   savedWords.value = result;
 })
 
-function toggleStressedChar(index) {
+function toggleStressedChar(index: any) {
   const foundIndex = stressedChars.value.indexOf(index)
   if(foundIndex !== -1) {
     stressedChars.value.splice(foundIndex, 1)
@@ -84,7 +84,7 @@ async function saveWord() {
   stressedChars.value = []
 }
 
-async function deleteWord(id) {
+async function deleteWord(id: any) {
   const response = await fetch('http://localhost:3000/delete-word', {
     method: 'DELETE',
     headers: {

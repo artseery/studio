@@ -9,7 +9,7 @@
         <button
             v-for="(char, index) in wordObject.word"
             class="words-buttons__item"
-            @click="toggleStress(wordObject, index, wordId)"
+            @click="toggleStress(index, wordId)"
             :class="[
                 {'words-buttons__item--empty': /\s/.test(char)},
                 {'words-buttons__item--stressed': words[wordId].stress && words[wordId].stress.includes(index)},
@@ -22,7 +22,7 @@
         <button
             v-for="(char, index) in wordObject.word"
             class="words-buttons__item words-buttons__item-correct"
-            @click="toggleStress(wordObject, index, wordId)"
+            @click="toggleStress(index, wordId)"
             :class="[
                 {'words-buttons__item--empty': /\s/.test(char)},
                 {'words-buttons__item--stressed': mistakes[wordId].stress && mistakes[wordId].stress.includes(index)},
@@ -41,13 +41,13 @@ import { defineProps, ref } from 'vue'
 
 const props = defineProps(['test']);
 
-const words = ref<object>(props.test)
+const words = ref<any>(props.test)
 
-const mistakes = ref<object>({})
+const mistakes = ref<any>({})
 
 const isResultMode = ref<boolean>(false)
 
-function toggleStress(word, index, wordId) {
+function toggleStress(index: any, wordId: any) {
   if (!words.value[wordId].stress) {
     words.value[wordId].stress = []
   }
