@@ -1,8 +1,6 @@
 # Используйте официальный образ Node.js
 FROM node:latest
 
-RUN apt-get update && apt-get install -y mongodb
-
 # Установите рабочую директорию в контейнере
 WORKDIR /usr/src/app
 
