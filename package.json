@@ -6,15 +6,17 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "serve dist -s"
   },
   "dependencies": {
     "mongoose": "^8.1.0",
     "sass": "^1.70.0",
     "sass-loader": "^14.0.0",
+    "serve": "^14.2.1",
+    "vite": "^5.0.8",
     "vue": "^3.3.11",
-    "vue-router": "^4.2.5",
-    "vite":"^5.0.8"
+    "vue-router": "^4.2.5"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.5.2",
