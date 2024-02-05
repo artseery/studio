@@ -1,6 +1,7 @@
 # Используйте официальный образ Node.js
 FROM node:latest
 
+
 # Установите рабочую директорию в контейнере
 WORKDIR /usr/src/app
 
@@ -12,10 +13,7 @@ RUN npm install
 COPY . .
 
 # Укажите порт, который будет использоваться вашим Express-приложением
-EXPOSE $PORT
+EXPOSE 3000
 
 # Запустите ваше приложение
-CMD service mongodb start && npm start
-
-# Запуск MongoDB и приложения
-CMD mongod --fork --logpath /var/log/mongodb.log && npm start
+CMD ["npm", "start"]
