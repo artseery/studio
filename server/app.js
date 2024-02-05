@@ -8,8 +8,10 @@ const PORT = 3000;
 app.use(cors())
 app.use(express.json());
 
-const mongoURI = `${process.env.MONGODB_URI}?directConnection=true` || 'mongodb://mongodb:27017/studio?directConnection=true';
-mongoose.connect(mongoURI);
+const mongoURI = process.env.MONGODB_URI || 'mongodb://mongodb:27017/studio';
+mongoose.connect(mongoURI, {
+    directConnection: true,
+});
 
 const stressSchema = new mongoose.Schema({
     word: String,
