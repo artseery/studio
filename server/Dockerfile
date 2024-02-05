@@ -1,9 +1,13 @@
 # Используйте официальный образ Node.js
 FROM node:latest
 
-# Install MongoDB client and tools
+# Установка MongoDB
 RUN apt-get update && \
-    apt-get install -y mongodb-clients mongodb-server && \
+    apt-get install -y gnupg && \
+    wget -qO - https://www.mongodb.org/static/pgp/server-5.0.asc | apt-key add - && \
+    echo "deb http://repo.mongodb.org/apt/debian buster/mongodb-org/5.0 main" | tee /etc/apt/sources.list.d/mongodb-org-5.0.list && \
+    apt-get update && \
+    apt-get install -y mongodb-org && \
     rm -rf /var/lib/apt/lists/*
 
 # Установите рабочую директорию в контейнере
@@ -17,7 +21,10 @@ RUN npm install
 COPY . .
 
 # Укажите порт, который будет использоваться вашим Express-приложением
-EXPOSE 3000
+EXPOSE $PORT
 
 # Запустите ваше приложение
 CMD service mongodb start && npm start
+
+# Запуск MongoDB и приложения
+CMD mongod --fork --logpath /var/log/mongodb.log && npm start
