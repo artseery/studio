@@ -8,7 +8,7 @@ const PORT = 3000;
 app.use(cors())
 app.use(express.json());
 
-const mongoURI = 'mongodb://mongodb:27017/studio';
+const mongoURI = process.env.MONGODB_URI || 'mongodb://mongodb:27017/studio';
 mongoose.connect(mongoURI);
 
 const stressSchema = new mongoose.Schema({

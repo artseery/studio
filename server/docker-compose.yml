@@ -5,8 +5,8 @@ services:
     ports:
       - "27017:27017"
     restart: always
-    environment:
-      MONGO_INITDB_DATABASE: studio
+    volumes:
+      - ./mongodb:/mongodb
   expressapp:
     build: .
     ports:
