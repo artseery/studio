@@ -1,9 +1,9 @@
 # Используйте официальный образ Node.js
 FROM node:latest
 
-# Установка MongoDB
+# Install MongoDB client and tools
 RUN apt-get update && \
-    apt-get install -y mongodb && \
+    apt-get install -y mongodb-clients mongodb-server && \
     rm -rf /var/lib/apt/lists/*
 
 # Установите рабочую директорию в контейнере
