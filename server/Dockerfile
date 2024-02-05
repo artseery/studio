@@ -1,6 +1,11 @@
 # Используйте официальный образ Node.js
 FROM node:latest
 
+# Установка MongoDB
+RUN apt-get update && \
+    apt-get install -y mongodb && \
+    rm -rf /var/lib/apt/lists/*
+
 # Установите рабочую директорию в контейнере
 WORKDIR /usr/src/app
 
@@ -15,4 +20,4 @@ COPY . .
 EXPOSE 3000
 
 # Запустите ваше приложение
-CMD ["npm", "start"]
+CMD service mongodb start && npm start
