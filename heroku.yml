@@ -1,4 +1,5 @@
 build:
   docker:
     web: ./server/Dockerfile
-run: npm run start
+run:
+  web: npm run dev
