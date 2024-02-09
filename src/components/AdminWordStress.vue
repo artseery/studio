@@ -7,7 +7,7 @@
           class="admin-words-buttons__item"
           :class="[
               {'admin-words-buttons__item--empty': /\s/.test(char)},
-              {'admin-words-buttons__item--stressed': stressedChars.includes(index.toFixed())}
+              {'admin-words-buttons__item--stressed': stressedChars.includes(index)}
               ]"
           @click="toggleStressedChar(index)"
       >
@@ -43,13 +43,13 @@
 import {computed, onMounted, ref} from 'vue';
 
 const newWord = ref<string>('');
-const stressedChars = ref<string[]>([]);
+const stressedChars = ref<Number[]>([]);
 const savedWords = ref<any>({});
 
 const splitWord = computed(() => newWord.value.split(''))
 
 onMounted(async () => {
-  const response = await fetch('https://studio-backend-zj2o.onrender.com:3000/words')
+  const response = await fetch('https://studio-backend-zj2o.onrender.com/words')
   savedWords.value = await response.json();
 })
 
@@ -67,7 +67,7 @@ function clearStressedChars() {
 }
 
 async function saveWord() {
-  const response = await fetch('https://studio-backend-zj2o.onrender.com:3000/save-word', {
+  const response = await fetch('https://studio-backend-zj2o.onrender.com/save-word', {
     method: 'POST',
     headers: {
       "Content-Type": "application/json",
@@ -82,7 +82,7 @@ async function saveWord() {
 }
 
 async function deleteWord(word: any) {
-  const response = await fetch('https://studio-backend-zj2o.onrender.com:3000/delete-word', {
+  const response = await fetch('https://studio-backend-zj2o.onrender.com/delete-word', {
     method: 'DELETE',
     headers: {
       "Content-Type": "application/json",
