@@ -20,12 +20,12 @@
       </div>
       <div v-if="mistakes[word]" class="words-buttons words-buttons__list">
         <button
-            v-for="(char, index) in mistakes[word]"
+            v-for="(char, index) in word"
             class="words-buttons__item words-buttons__item-correct"
             @click="toggleStress(index, word)"
             :class="[
                 {'words-buttons__item--empty': /\s/.test(char)},
-                {'words-buttons__item--stressed': words[word] && words[word].includes(index)},
+                {'words-buttons__item--stressed': mistakes[word] && mistakes[word].includes(index)},
                 ]"
         >
           <span>{{ char }}</span>
