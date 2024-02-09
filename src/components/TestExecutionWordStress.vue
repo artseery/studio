@@ -60,7 +60,7 @@ function toggleStress(index: any, word: any) {
 }
 async function checkResult() {
   const req = words.value
-  const response = await fetch('http://localhost:3000/check-test', {
+  const response = await fetch('https://studio-backend-zj2o.onrender.com/check-test', {
     method: 'POST',
     headers: {
       "Content-Type": "application/json",
