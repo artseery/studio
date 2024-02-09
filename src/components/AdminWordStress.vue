@@ -28,7 +28,7 @@
               class="admin-words-buttons__item"
               :class="[
               {'admin-words-buttons__item--empty': /\s/.test(char.toString())},
-              {'admin-words-buttons__item--stressed': stress.includes(index)}
+              {'admin-words-buttons__item--stressed': JSON.parse(stress).indexOf(index) !== -1}
               ]"
           >
             <span>{{ char }}</span>

@@ -25,7 +25,7 @@
             @click="toggleStress(index, word)"
             :class="[
                 {'words-buttons__item--empty': /\s/.test(char)},
-                {'words-buttons__item--stressed': mistakes[word] && mistakes[word].includes(index)},
+                {'words-buttons__item--stressed': mistakes[word] && JSON.parse(mistakes[word]).includes(index)},
                 ]"
         >
           <span>{{ char }}</span>
