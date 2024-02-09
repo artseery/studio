@@ -1,6 +1,6 @@
 const express = require('express');
-const mongoose = require('mongoose')
 const cors = require('cors');
+const redis = require('redis')
 
 const app = express();
 const PORT = 3000;
@@ -8,41 +8,65 @@ const PORT = 3000;
 app.use(cors())
 app.use(express.json());
 
-const mongoURI = process.env.MONGODB_URI || 'mongodb://mongodb:27017/studio';
-mongoose.connect(mongoURI, {
-    directConnection: true,
+const client = redis.createClient({
+    url: 'redis://red-cn33rstjm4es73bi5lo0:6379',
 });
 
-const stressSchema = new mongoose.Schema({
-    word: String,
-    stress: Array,
-})
+client.on('error', err => console.log('Redis Client Error', err));
 
-const Stress = mongoose.model('Stress', stressSchema)
+client.connect();
 
-async function getWords() {
-    return Stress.find();
+const prefix = 'stresses';
+
+// Middleware для использования Redis
+app.use((req, res, next) => {
+    req.redisClient = client;
+    next();
+});
+
+// Функция для получения случайного индекса
+function getRandomIndex(max) {
+    return Math.floor(Math.random() * max);
 }
 
-app.get('/', (req, res)=>{
+// Получение 10 случайных элементов
+function getRandomElements(array, count) {
+    let result = [];
+    const length = array.length;
+
+    // Если запрашиваемое количество элементов больше, чем длина массива, уменьшите count
+    count = Math.min(count, length);
+
+    while (result.length < count) {
+        const randomIndex = getRandomIndex(length);
+        const randomElement = array[randomIndex];
+
+        // Убедитесь, что элемент не был выбран ранее
+        if (!result.includes(randomElement)) {
+            result.push(randomElement);
+        }
+    }
+
+    return result;
+}
+
+async function getWords() {
+    return await client.hGetAll(prefix)
+}
+
+app.get('/', async (req, res)=>{
+    const result = await client.hScan(prefix, 0, {COUNT: 1})
     res.status(200);
-    res.send("Welcome to root URL of Server");
+    res.send(result);
 });
 
 app.get('/get-test', async (req, res) => {
     const letter = req.query.letter || '';
     const count = req.query.count || 20;
-    console.log(letter, count)
     try {
-        const words = await Stress.aggregate([
-            { $match: { word: { $regex: `^${letter}`, $options: 'i' } } },
-            { $sample: { size: Number(count) } },
-            { $project: { 'word': 1 } }
-        ])
-        const response = {};
-        words.forEach((el) => {
-            response[el._id] = { word: el.word }
-        })
+        const scan = await client.hScan(prefix, 0, {MATCH: `${letter}*`})
+        const tuples = scan.tuples
+        const response = getRandomElements(tuples, count).map((el) => el.field)
         res.json(response);
     } catch (error) {
         console.error(error)
@@ -52,20 +76,22 @@ app.get('/get-test', async (req, res) => {
 
 app.post('/check-test', async(req, res) => {
     const answers = req.body.words;
-    const ids = Object.keys(answers);
-    console.log(answers)
+    // привет: [2]
+    const words = Object.keys(answers);
     try {
         if (!req.body.words) {
             res.status(403).json({status: 'No words'})
         }
-        const stresses = await Stress.find({ _id: { $in: ids } })
+        const stresses = await client.hmGet(prefix, words)
+        const rightAnswers = {}
+        stresses.forEach((el, index) => {
+            rightAnswers[`${words[index]}`] = el
+        })
         const response = {}
-        for (const id in answers) {
-            const stressData = stresses.find((word) => word._id.toString() === id);
-            if (stressData && !answers[id].stress.every((el) => stressData.stress.includes(el))) {
-                response[id] = stressData;
-            }
-        }
+        const wrongWords = words.filter((word, index) => !answers[word].every((el) => JSON.parse(stresses[index]).includes(el)))
+        wrongWords.forEach((el) => {
+            response[el] = rightAnswers[el]
+        })
         res.json(response)
     } catch (error) {
         console.error(error)
@@ -78,10 +104,11 @@ app.post('/save-word', async (req, res) => {
         if (!req.body.word) {
             res.status(403).json({status: 'No word'})
         }
-        const word = new Stress({ word: req.body.word, stress: req.body.stress })
-        await word.save();
+        const { word, stress } = req.body;
+        // Добавляем запись с префиксом в Redis
+        await client.hSet(prefix, word.toLowerCase(), JSON.stringify(stress));
         const words = await getWords()
-        res.json({status: 'success', words})
+        res.json({ message: 'New word added', words })
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -89,15 +116,11 @@ app.post('/save-word', async (req, res) => {
 })
 
 app.delete('/delete-word', async (req, res) => {
-    const id = req.body.wordId;
+    const word = req.body.word;
     try {
-        const deletedWord = await Stress.deleteOne({_id: id});
+        await client.hDel(prefix, word)
         const words = await getWords()
-        if (!deletedWord) {
-            return res.status(404).json({ error: 'Note not found' });
-        }
-
-        res.json({ message: 'Note deleted successfully', deletedWord, words});
+        res.json({ message: 'Note deleted successfully', words});
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });

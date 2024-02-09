@@ -1,31 +1,31 @@
 <template>
   <div class="test">
     <div
-        v-for="(wordObject, wordId) in props.test"
+        v-for="word in props.test"
         class="words-item"
-        :class="{'words-item--mistake': mistakes[wordId]}"
+        :class="{'words-item--mistake': mistakes[word]}"
     >
       <div class="words-buttons words-buttons__list">
         <button
-            v-for="(char, index) in wordObject.word"
+            v-for="(char, index) in word"
             class="words-buttons__item"
-            @click="toggleStress(index, wordId)"
+            @click="toggleStress(index, word)"
             :class="[
                 {'words-buttons__item--empty': /\s/.test(char)},
-                {'words-buttons__item--stressed': words[wordId].stress && words[wordId].stress.includes(index)},
+                {'words-buttons__item--stressed': words[word] && words[word].includes(index)},
                 ]"
         >
           <span>{{ char }}</span>
         </button>
       </div>
-      <div v-if="mistakes[wordId]" class="words-buttons words-buttons__list">
+      <div v-if="mistakes[word]" class="words-buttons words-buttons__list">
         <button
-            v-for="(char, index) in wordObject.word"
+            v-for="(char, index) in word"
             class="words-buttons__item words-buttons__item-correct"
-            @click="toggleStress(index, wordId)"
+            @click="toggleStress(index, word)"
             :class="[
                 {'words-buttons__item--empty': /\s/.test(char)},
-                {'words-buttons__item--stressed': mistakes[wordId].stress && mistakes[wordId].stress.includes(index)},
+                {'words-buttons__item--stressed': words[word] && words[word].includes(index)},
                 ]"
         >
           <span>{{ char }}</span>
@@ -41,21 +41,21 @@ import { defineProps, ref } from 'vue'
 
 const props = defineProps(['test']);
 
-const words = ref<any>(props.test)
+const words = ref<any>({})
 
 const mistakes = ref<any>({})
 
 const isResultMode = ref<boolean>(false)
 
-function toggleStress(index: any, wordId: any) {
-  if (!words.value[wordId].stress) {
-    words.value[wordId].stress = []
+function toggleStress(index: any, word: any) {
+  if (!words.value[word]) {
+    words.value[word] = []
   }
-  const foundIndex = words.value[wordId].stress.indexOf(index)
+  const foundIndex = words.value[word].indexOf(index)
   if(foundIndex !== -1) {
-    words.value[wordId].stress.splice(foundIndex, 1)
+    words.value[word].splice(foundIndex, 1)
   } else {
-    words.value[wordId].stress.push(index)
+    words.value[word].push(index)
   }
 }
 async function checkResult() {
