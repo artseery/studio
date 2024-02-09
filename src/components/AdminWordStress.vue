@@ -43,7 +43,7 @@
 import {computed, onMounted, ref} from 'vue';
 
 const newWord = ref<string>('');
-const stressedChars = ref<Number[]>([]);
+const stressedChars = ref<number[]>([]);
 const savedWords = ref<any>({});
 
 const splitWord = computed(() => newWord.value.split(''))
