@@ -23,7 +23,7 @@ const settings = ref<any>({
 });
 
 async function start() {
-  const response = await fetch(`http://localhost:3000/get-test?${new URLSearchParams({
+  const response = await fetch(`https://studio-backend-zj2o.onrender.com/get-test?${new URLSearchParams({
     count: settings.value.count,
     letter: settings.value.letter,
   })}`)
