@@ -20,7 +20,7 @@
       </div>
       <div v-if="mistakes[word]" class="words-buttons words-buttons__list">
         <button
-            v-for="(char, index) in word"
+            v-for="(char, index) in mistakes[word]"
             class="words-buttons__item words-buttons__item-correct"
             @click="toggleStress(index, word)"
             :class="[
