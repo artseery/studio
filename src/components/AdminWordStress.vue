@@ -7,7 +7,7 @@
           class="admin-words-buttons__item"
           :class="[
               {'admin-words-buttons__item--empty': /\s/.test(char)},
-              {'admin-words-buttons__item--stressed': stressedChars.includes(index)}
+              {'admin-words-buttons__item--stressed': stressedChars.includes(index.toFixed())}
               ]"
           @click="toggleStressedChar(index)"
       >
@@ -27,7 +27,7 @@
               v-for="(char, index) in word"
               class="admin-words-buttons__item"
               :class="[
-              {'admin-words-buttons__item--empty': /\s/.test(char)},
+              {'admin-words-buttons__item--empty': /\s/.test(char.toString())},
               {'admin-words-buttons__item--stressed': stress.includes(index)}
               ]"
           >
