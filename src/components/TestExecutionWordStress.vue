@@ -122,7 +122,7 @@ async function checkResult() {
     gap: 8px
     &--mistake
       border: 2px solid #ff5454
-      border-radius: 8px
+      border-radius: 12px
     &--mistake
       .words
         &-buttons
