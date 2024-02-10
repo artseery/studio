@@ -93,7 +93,7 @@ app.post('/check-test', async(req, res) => {
         wrongWords.forEach((el) => {
             response[el] = rightAnswers[el]
         })
-        res.json(response)
+        res.json({mistakes: response})
     } catch (error) {
         console.error(error)
         res.status(500).json({ error: error.message })

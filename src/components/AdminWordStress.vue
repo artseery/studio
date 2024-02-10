@@ -115,7 +115,7 @@ async function deleteWord(word: any) {
       justify-content: center
       background: #5e81f8
       color: #fff
-      font-size: 18px
+      font-size: 22px
       font-weight: 500
       transition: all .3s ease
       border-radius: 8px

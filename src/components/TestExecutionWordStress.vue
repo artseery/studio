@@ -33,14 +33,17 @@
       </div>
     </div>
     <button v-if="!isResultMode" class="button" @click="checkResult">Проверить результат</button>
-    <div class="words-result" v-else>
-      {{Object.keys(words).length - Object.keys(mistakes).length}}/{{Object.keys(words).length}} верно
+    <div
+        class="words-result"
+        :class="rightAnswersCount < answersCount ? 'words-result--wrong' : 'words-result--right'"
+        v-else>
+      <span>{{rightAnswersCount}}</span>/<span>{{answersCount}}</span> верно
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref } from 'vue'
+import {computed, defineProps, ref} from 'vue'
 
 const props = defineProps(['test']);
 
@@ -49,6 +52,15 @@ const words = ref<any>({})
 const mistakes = ref<any>({})
 
 const isResultMode = ref<boolean>(false)
+
+const rightAnswersCount = computed(() => {
+  console.log(mistakes.value)
+  return Object.keys(words.value).length - Object.keys(mistakes.value).length
+})
+
+const answersCount = computed(() => {
+  return Object.keys(props.test).length
+})
 
 function toggleStress(index: any, word: any) {
   if (!words.value[word]) {
@@ -70,7 +82,10 @@ async function checkResult() {
     },
     body: JSON.stringify({words: req})
   })
-  mistakes.value = await response.json()
+  const result = await response.json()
+  if (result.mistakes) {
+    mistakes.value = result.mistakes
+  }
   isResultMode.value = true
 }
 
@@ -95,6 +110,11 @@ async function checkResult() {
   &-result
     font-size: 24px
     font-weight: 600
+    letter-spacing: 1px
+    &--wrong
+      color: #ff5454
+    &--right
+      color: #2ea156
   &-item
     display: flex
     flex-direction: column
@@ -123,7 +143,7 @@ async function checkResult() {
       justify-content: center
       background: #5e81f8
       color: #fff
-      font-size: 18px
+      font-size: 22px
       font-weight: 500
       transition: all .3s ease
       border-radius: 8px
