@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, onMounted, ref, watch} from "vue";
+import {computed, watch} from "vue";
 import {useRoute} from "vue-router";
 
 const route = useRoute();
