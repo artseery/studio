@@ -77,11 +77,12 @@ app.get('/get-test', async (req, res) => {
 app.post('/check-test', async(req, res) => {
     const answers = req.body.words;
     // привет: [2]
-    const words = Object.keys(answers);
     try {
-        if (!req.body.words) {
+        if (!req?.body?.words || Object.keys(answers).length === 0) {
             res.status(403).json({status: 'No words'})
+            return;
         }
+        const words = Object.keys(answers);
         const stresses = await client.hmGet(prefix, words)
         const rightAnswers = {}
         stresses.forEach((el, index) => {
@@ -103,6 +104,7 @@ app.post('/save-word', async (req, res) => {
     try {
         if (!req.body.word) {
             res.status(403).json({status: 'No word'})
+            return;
         }
         const { word, stress } = req.body;
         // Добавляем запись с префиксом в Redis

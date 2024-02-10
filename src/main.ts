@@ -10,9 +10,9 @@ const app = createApp(App)
 const router = createRouter({
     history: createWebHistory(),
     routes: [
-        { path: '/', redirect: '/admin' },
-        { path: '/admin', component: AdminWordStress },
-        { path: '/test', component: TestWordStress }
+        { path: '/', redirect: '/admin'},
+        { path: '/admin', component: AdminWordStress, name: 'admin' },
+        { path: '/test', component: TestWordStress, name: 'test' }
     ]
 })
 

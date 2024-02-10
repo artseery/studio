@@ -33,6 +33,9 @@
       </div>
     </div>
     <button v-if="!isResultMode" class="button" @click="checkResult">Проверить результат</button>
+    <div class="words-result" v-else>
+      {{Object.keys(words).length - Object.keys(mistakes).length}}/{{Object.keys(words).length}} верно
+    </div>
   </div>
 </template>
 
@@ -89,6 +92,9 @@ async function checkResult() {
   justify-content: center
   align-items: center
   padding: 20px
+  &-result
+    font-size: 24px
+    font-weight: 600
   &-item
     display: flex
     flex-direction: column
