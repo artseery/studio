@@ -1,6 +1,12 @@
 <template>
   <div class="admin-words">
-    <input class="admin-words__input" v-model="newWord" @input="clearStressedChars()"/>
+    <input
+        ref="wordInput"
+        class="admin-words__input"
+        v-model="newWord"
+        @input="clearStressedChars()"
+        @keyup.enter="saveWord"
+    />
     <div class="admin-words-buttons admin-words-buttons__input">
       <button
           v-for="(char, index) in splitWord"
@@ -14,7 +20,13 @@
         <span>{{ char }}</span>
       </button>
     </div>
-    <button class="admin-words-save" @click="saveWord">Сохранить</button>
+    <button
+        class="button"
+        :disabled="!newWord"
+        @click="saveWord"
+    >
+      Сохранить
+    </button>
 
     <div v-if="Object.keys(savedWords).length" class="admin-words-list">
       <div class="admin-words-list__title">Сохраненные слова:</div>
@@ -45,6 +57,7 @@ import {computed, onMounted, ref} from 'vue';
 const newWord = ref<string>('');
 const stressedChars = ref<number[]>([]);
 const savedWords = ref<any>({});
+const wordInput = ref<any>(null);
 
 const splitWord = computed(() => newWord.value.split(''))
 
@@ -77,6 +90,8 @@ async function saveWord() {
   const result = await response.json()
   savedWords.value = result.words
 
+  wordInput.value.focus()
+
   newWord.value = ''
   stressedChars.value = []
 }
@@ -91,6 +106,7 @@ async function deleteWord(word: any) {
   })
   const result = await response.json()
   savedWords.value = result.words
+
 
   console.log(result)
 }
@@ -132,19 +148,6 @@ async function deleteWord(word: any) {
           background: #2e8f4b
     &__list &__item
       cursor: default
-  &-save
-    width: 200px
-    height: 40px
-    border-radius: 40px
-    font-weight: 600
-    font-size: 16px
-    margin-top: 12px
-    background: #5e81f8
-    color: #fff
-    border: none
-    transition: all .3s ease
-    &:hover
-      background: #4e75f8
   &-list
     padding: 24px 0
     display: flex

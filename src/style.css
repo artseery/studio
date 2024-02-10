@@ -91,6 +91,11 @@ input :hover, input:active, input:focus {
   transition: all .3s ease;
 }
 
+.button[disabled] {
+  background: #95adff;
+  pointer-events: none;
+}
+
 .button:hover {
   background: #4e75f8
 }
