@@ -6,21 +6,29 @@
         :class="{'words-item--mistake': mistakes[word]}"
     >
       <div class="words-buttons words-buttons__list">
-        <button
-            v-for="(char, index) in word"
-            class="words-buttons__item"
-            @click="toggleStress(index, word)"
-            :class="[
-                {'words-buttons__item--empty': /\s/.test(char)},
-                {'words-buttons__item--stressed': words[word] && words[word].includes(index)},
-                ]"
-        >
-          <span>{{ char }}</span>
-        </button>
+        <template v-for="(char, index) in word">
+          <button
+              v-if="
+                  !word.slice(0, index + 1).includes('(')  ||
+                   (word.slice(0, index + 1).includes('(') && word.slice(0, index).includes(')'))"
+              class="words-buttons__item"
+              @click="toggleStress(index, word)"
+              :class="[
+                  {'words-buttons__item--empty': /\s/.test(char)},
+                  {'words-buttons__item--stressed': words[word] && words[word].includes(index)},
+                  ]"
+          >
+            <span>{{ char }}</span>
+          </button>
+          <template v-else>{{ char }}</template>
+        </template>
       </div>
       <div v-if="mistakes[word]" class="words-buttons words-buttons__list">
+        <template v-for="(char, index) in word">
         <button
-            v-for="(char, index) in word"
+            v-if="
+                  !word.slice(0, index + 1).includes('(')  ||
+                   (word.slice(0, index + 1).includes('(') && word.slice(0, index).includes(')'))"
             class="words-buttons__item words-buttons__item-correct"
             @click="toggleStress(index, word)"
             :class="[
@@ -30,6 +38,8 @@
         >
           <span>{{ char }}</span>
         </button>
+        <template v-else>{{ char }}</template>
+        </template>
       </div>
     </div>
     <button v-if="!isResultMode" class="button" @click="checkResult">Проверить результат</button>
@@ -119,7 +129,7 @@ async function checkResult() {
     display: flex
     flex-direction: column
     padding: 4px
-    gap: 8px
+    gap: 6px
     &--mistake
       border: 2px solid #ff5454
       border-radius: 12px
@@ -133,8 +143,11 @@ async function checkResult() {
               background: #2ea156
   &-buttons
     display: flex
-    gap: 4px
+    gap: 2px
     height: 40px
+    &__list
+      display: flex
+      align-items: center
     &__item
       width: 40px
       height: 40px
@@ -162,9 +175,9 @@ async function checkResult() {
     padding: 24px 0
     display: flex
     flex-direction: column
-    gap: 8px
+    gap: 6px
     min-width: 600px
     &__item
       display: flex
-      gap: 8px
+      gap: 6px
 </style>
