@@ -45,8 +45,8 @@
           >
             <button
                 v-if="
-                !word.slice(0, index + 1).includes('(')  ||
-                 (word.slice(0, index + 1).includes('(') && word.slice(0, index).includes(')'))"
+                !word.toString().slice(0, index + 1).includes('(')  ||
+                 (word.toString().slice(0, index + 1).includes('(') && word.toString().slice(0, index).includes(')'))"
                 class="admin-words-buttons__item"
                 :class="[
                 {'admin-words-buttons__item--empty': /\s/.test(char.toString())},
@@ -65,6 +65,7 @@
 
 <script setup lang="ts">
 import {computed, onMounted, ref} from 'vue';
+
 
 const newWord = ref<string>('');
 const stressedChars = ref<number[]>([]);
