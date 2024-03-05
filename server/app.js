@@ -51,7 +51,10 @@ function getRandomElements(array, count) {
 }
 
 async function getWords() {
-    return await client.hGetAll(prefix)
+    const words = await client.hGetAll(prefix)
+    return Object.fromEntries(
+        Object.entries(words).sort((a, b) => a[0].localeCompare(b[0]))
+    )
 }
 
 app.get('/', async (req, res)=>{
