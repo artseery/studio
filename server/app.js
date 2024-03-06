@@ -9,7 +9,7 @@ app.use(cors())
 app.use(express.json());
 
 const client = redis.createClient({
-    url: 'redis://red-cn33rstjm4es73bi5lo0:6379',
+    url: 'rediss://red-cn33rstjm4es73bi5lo0:6EXrktRXH94v1EwyipFShgCgEYfaGfF7@frankfurt-redis.render.com:6379',
 });
 
 client.on('error', err => console.log('Redis Client Error', err));
@@ -29,7 +29,6 @@ function getRandomIndex(max) {
     return Math.floor(Math.random() * max);
 }
 
-// Получение 10 случайных элементов
 function getRandomElements(array, count) {
     let result = [];
     const length = array.length;
@@ -67,8 +66,9 @@ app.get('/get-test', async (req, res) => {
     const letter = req.query.letter || '';
     const count = req.query.count || 20;
     try {
-        const scan = await client.hScan(prefix, 0, {MATCH: `${letter}*`})
+        const scan = await client.hScan(prefix, 0, {MATCH: `${letter}*`, COUNT: 10000})
         const tuples = scan.tuples
+        console.log(tuples)
         const response = getRandomElements(tuples, count).map((el) => el.field)
         res.json(response);
     } catch (error) {
