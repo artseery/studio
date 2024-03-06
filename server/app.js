@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const redis = require('redis')
+require('dotenv').config();
 
 const app = express();
 const PORT = 3000;
@@ -9,7 +10,7 @@ app.use(cors())
 app.use(express.json());
 
 const client = redis.createClient({
-    url: 'redis://red-cn33rstjm4es73bi5lo0:6379',
+    url: process.env.REDIS,
 });
 
 client.on('error', err => console.log('Redis Client Error', err));
