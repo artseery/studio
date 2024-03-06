@@ -58,7 +58,7 @@ async function getWords() {
 }
 
 app.get('/', async (req, res)=>{
-    const result = await client.hScan(prefix, 0, {COUNT: 1})
+    const result = await client.dump(prefix)
     res.status(200);
     res.send(result);
 });
