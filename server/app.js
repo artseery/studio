@@ -9,7 +9,7 @@ app.use(cors())
 app.use(express.json());
 
 const client = redis.createClient({
-    url: 'rediss://red-cn33rstjm4es73bi5lo0:6EXrktRXH94v1EwyipFShgCgEYfaGfF7@frankfurt-redis.render.com:6379',
+    url: 'redis://red-cn33rstjm4es73bi5lo0:6379',
 });
 
 client.on('error', err => console.log('Redis Client Error', err));
